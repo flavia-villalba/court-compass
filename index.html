@@ -9,27 +9,32 @@
   <body>
     <aside class="sidebar">
       <div class="brand">
-        <div class="brand-mark" aria-hidden="true">
-          <span></span>
-        </div>
-        <h1><strong>Court</strong> Compass</h1>
+        <img class="brand-logo" src="./assets/court-compass-logo.png" alt="Court Compass" />
       </div>
 
       <nav class="side-nav" aria-label="Primary navigation">
         <button class="nav-item active" data-view-button="tournaments">
-          <span class="icon">🏆</span>
+          <span class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M7 4h10v3a5 5 0 0 1-10 0V4Z"/><path d="M5 5H3v2a4 4 0 0 0 4 4"/><path d="M19 5h2v2a4 4 0 0 1-4 4"/><path d="M12 12v5"/><path d="M8 20h8"/><path d="M10 17h4"/></svg>
+          </span>
           <span>Tournaments</span>
         </button>
         <button class="nav-item" data-view-button="calendar">
-          <span class="icon">📅</span>
+          <span class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M7 3v4"/><path d="M17 3v4"/><path d="M4 9h16"/><path d="M5 5h14a1 1 0 0 1 1 1v14H4V6a1 1 0 0 1 1-1Z"/><path d="M8 13h3"/><path d="M13 13h3"/><path d="M8 17h3"/></svg>
+          </span>
           <span>Calendar</span>
         </button>
         <button class="nav-item" data-view-button="favorites">
-          <span class="icon">♡</span>
+          <span class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M20.4 5.6a5 5 0 0 0-7.1 0L12 6.9l-1.3-1.3a5 5 0 0 0-7.1 7.1L12 21l8.4-8.3a5 5 0 0 0 0-7.1Z"/></svg>
+          </span>
           <span>Favorites</span>
         </button>
         <button class="nav-item" data-view-button="submit">
-          <span class="icon">＋</span>
+          <span class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/><path d="M4 4h16v16H4Z"/></svg>
+          </span>
           <span>Submit</span>
         </button>
       </nav>
@@ -45,9 +50,20 @@
     <main class="app-shell">
       <section class="hero">
         <div class="hero-inner">
+          <div class="intro-copy">
+            <p class="eyebrow">Youth Basketball Tournament Finder</p>
+            <h2>Find the right court, city, and weekend faster.</h2>
+            <p>
+              Court Compass helps parents and players discover basketball tournaments across Iowa, Minnesota,
+              Montana, North Dakota, South Dakota, and Wyoming.
+            </p>
+          </div>
+
           <div class="search-row">
             <label class="search-box">
-              <span>⌕</span>
+              <span aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="m21 21-4.3-4.3"/><circle cx="11" cy="11" r="7"/></svg>
+              </span>
               <input id="searchInput" type="search" placeholder="Search tournaments, cities, venues, or organizations..." />
             </label>
           </div>
@@ -91,8 +107,12 @@
               <h2 id="viewTitle">Upcoming Tournaments</h2>
             </div>
             <div class="view-toggle" aria-label="Tournament view">
-              <button class="active" id="cardsViewButton" aria-label="Cards view">▦</button>
-              <button id="mapViewButton" aria-label="Map view">⌖</button>
+              <button class="active" id="cardsViewButton" aria-label="Cards view">
+                <svg viewBox="0 0 24 24"><path d="M4 4h7v7H4Z"/><path d="M13 4h7v7h-7Z"/><path d="M4 13h7v7H4Z"/><path d="M13 13h7v7h-7Z"/></svg>
+              </button>
+              <button id="mapViewButton" aria-label="Map view">
+                <svg viewBox="0 0 24 24"><path d="M9 18 3 21V6l6-3 6 3 6-3v15l-6 3-6-3Z"/><path d="M9 3v15"/><path d="M15 6v15"/></svg>
+              </button>
             </div>
           </div>
         </div>

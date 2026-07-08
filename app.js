@@ -459,7 +459,7 @@ const stateLabels = [
 
 const supportedStates = ["IA", "MN", "MT", "ND", "SD", "WY"];
 const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-const today = "2026-07-03";
+const today = new Date().toISOString().slice(0, 10);
 
 const els = {
   search: document.querySelector("#searchInput"),
