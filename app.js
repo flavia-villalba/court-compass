@@ -1,3 +1,6 @@
+const supabaseConfig = window.COURT_COMPASS_SUPABASE || {};
+const supabaseRestUrl = supabaseConfig.url ? `${supabaseConfig.url}/rest/v1` : "";
+
 const seedTournaments = [
   {
     id: "nd-middle-school-championship",
@@ -460,6 +463,19 @@ const stateLabels = [
 const supportedStates = ["IA", "MN", "MT", "ND", "SD", "WY"];
 const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 const today = new Date().toISOString().slice(0, 10);
+const cityCoordinates = {
+  "Fargo, ND": { lat: 46.8772, lng: -96.7898 },
+  "Grand Forks, ND": { lat: 47.9253, lng: -97.0329 },
+  "Beulah, ND": { lat: 47.2633, lng: -101.7779 },
+  "Williston, ND": { lat: 48.1469, lng: -103.6179 },
+  "Bismarck, ND": { lat: 46.8083, lng: -100.7837 },
+  "Devils Lake, ND": { lat: 48.1128, lng: -98.8651 },
+  "Valley City, ND": { lat: 46.9233, lng: -98.0032 },
+  "Sioux Falls, SD": { lat: 43.546, lng: -96.7313 },
+  "Aberdeen, SD": { lat: 45.4647, lng: -98.4865 },
+  "Multiple Cities, ND": { lat: 47.5515, lng: -101.002 },
+  "Multiple Cities, SD": { lat: 44.2998, lng: -99.4388 },
+};
 
 const els = {
   search: document.querySelector("#searchInput"),
@@ -490,6 +506,8 @@ let currentView = "tournaments";
 let visualMode = "cards";
 let favorites = readStored("courtCompassFavorites", []);
 let submitted = readStored("courtCompassSubmissions", []);
+let liveTournaments = [];
+let usingLiveData = false;
 
 function readStored(key, fallback) {
   try {
@@ -504,7 +522,92 @@ function writeStored(key, value) {
 }
 
 function allTournaments() {
+  if (usingLiveData) return liveTournaments;
   return [...seedTournaments, ...submitted];
+}
+
+async function supabaseRequest(path, options = {}) {
+  if (!supabaseRestUrl || !supabaseConfig.publishableKey) {
+    throw new Error("Supabase is not configured.");
+  }
+
+  const response = await fetch(`${supabaseRestUrl}${path}`, {
+    ...options,
+    headers: {
+      apikey: supabaseConfig.publishableKey,
+      Authorization: `Bearer ${supabaseConfig.publishableKey}`,
+      "Content-Type": "application/json",
+      Prefer: "return=representation",
+      ...(options.headers || {}),
+    },
+  });
+
+  if (!response.ok) {
+    const message = await response.text();
+    throw new Error(message || `Supabase request failed with ${response.status}`);
+  }
+
+  if (response.status === 204) return null;
+  return response.json();
+}
+
+async function loadApprovedTournaments() {
+  try {
+    const rows = await supabaseRequest("/tournaments?select=*&status=eq.approved&order=start_date.asc.nullslast");
+    liveTournaments = rows.map(dbToTournament);
+    usingLiveData = liveTournaments.length > 0;
+  } catch (error) {
+    console.warn("Using starter tournament data because Supabase could not be loaded.", error);
+    usingLiveData = false;
+  }
+}
+
+function dbToTournament(row) {
+  const coords = cityCoordinates[`${row.city || ""}, ${row.state || ""}`] || {};
+  return {
+    id: row.id,
+    name: row.name,
+    host: row.host,
+    startDate: row.start_date || "",
+    endDate: row.end_date || "",
+    city: row.city,
+    state: row.state,
+    gender: row.gender,
+    grades: row.grades,
+    format: row.tournament_format,
+    playStyle: row.play_style,
+    venue: row.venue,
+    registrationLink: row.registration_link,
+    fee: row.entry_fee,
+    awards: row.prize_awards,
+    contact: row.contact_name,
+    website: row.website,
+    notes: row.notes,
+    status: row.status,
+    lat: coords.lat,
+    lng: coords.lng,
+  };
+}
+
+function formToDatabaseRow(data) {
+  return {
+    name: data.name,
+    host: data.host,
+    start_date: data.startDate || null,
+    end_date: data.endDate || null,
+    city: data.city,
+    state: data.state,
+    gender: data.gender,
+    grades: data.grades,
+    tournament_format: data.format,
+    play_style: data.playStyle,
+    venue: data.venue,
+    registration_link: data.registrationLink,
+    entry_fee: data.fee,
+    website: data.registrationLink,
+    notes: data.notes,
+    status: "pending",
+  };
 }
 
 function formatDateRange(tournament) {
@@ -531,6 +634,11 @@ function unique(values) {
 }
 
 function populateFilters() {
+  [els.state, els.city, els.month, els.gender, els.format].forEach((select) => {
+    const first = select.querySelector("option");
+    select.innerHTML = "";
+    select.append(first);
+  });
   supportedStates.forEach((state) => els.state.add(new Option(state, state)));
   unique(allTournaments().map((item) => item.city)).forEach((city) => els.city.add(new Option(city, city)));
   unique(allTournaments().map(monthKey)).forEach((key) => els.month.add(new Option(monthLabel(key), key)));
@@ -665,7 +773,8 @@ function renderMap(items) {
 
   grouped.forEach((group, label) => {
     const first = group[0];
-    const point = project(first.lat, first.lng);
+    const coords = resolveCoordinates(first);
+    const point = project(coords.lat, coords.lng);
     const pin = document.createElement("button");
     pin.className = "map-pin";
     pin.textContent = group.length;
@@ -683,6 +792,11 @@ function renderMap(items) {
     item.innerHTML = `<h3>${label}</h3><p>${group.length} tournament${group.length === 1 ? "" : "s"}</p>`;
     els.mapList.append(item);
   });
+}
+
+function resolveCoordinates(item) {
+  if (item.lat && item.lng) return { lat: item.lat, lng: item.lng };
+  return cityCoordinates[`${item.city}, ${item.state}`] || { lat: 45.5, lng: -101.5 };
 }
 
 function project(lat, lng) {
@@ -724,7 +838,7 @@ function resetFilters() {
   render();
 }
 
-function handleSubmit(event) {
+async function handleSubmit(event) {
   event.preventDefault();
   const data = Object.fromEntries(new FormData(els.form).entries());
   const tournament = {
@@ -750,8 +864,19 @@ function handleSubmit(event) {
     lat: 46.8772,
     lng: -100.0,
   };
-  submitted = [...submitted, tournament];
-  writeStored("courtCompassSubmissions", submitted);
+
+  try {
+    await supabaseRequest("/tournaments", {
+      method: "POST",
+      headers: { Prefer: "return=minimal" },
+      body: JSON.stringify(formToDatabaseRow(data)),
+    });
+  } catch (error) {
+    console.warn("Saved locally because Supabase submission failed.", error);
+    submitted = [...submitted, tournament];
+    writeStored("courtCompassSubmissions", submitted);
+  }
+
   els.form.reset();
   els.success.style.display = "block";
   setTimeout(() => {
@@ -759,8 +884,13 @@ function handleSubmit(event) {
   }, 3500);
 }
 
-populateFilters();
-render();
+async function initApp() {
+  await loadApprovedTournaments();
+  populateFilters();
+  render();
+}
+
+initApp();
 
 [els.search, els.state, els.city, els.month, els.gender, els.format].forEach((field) => {
   field.addEventListener("input", render);

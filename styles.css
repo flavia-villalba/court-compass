@@ -76,7 +76,8 @@ button {
 }
 
 .nav-item,
-.submit-cta {
+.submit-cta,
+.admin-link {
   align-items: center;
   border: 0;
   border-radius: 8px;
@@ -132,6 +133,15 @@ button {
   font-size: 18px;
   justify-content: center;
   margin-top: auto;
+}
+
+.admin-link {
+  background: #eef5f7;
+  color: var(--navy);
+  font-size: 16px;
+  font-weight: 800;
+  min-height: 50px;
+  text-decoration: none;
 }
 
 .profile {
@@ -629,6 +639,7 @@ dd {
   }
 
   .submit-cta,
+  .admin-link,
   .profile {
     display: none;
   }

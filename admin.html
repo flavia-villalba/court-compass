@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Court Compass Admin</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./admin.css" />
+  </head>
+  <body class="admin-body">
+    <main class="admin-shell">
+      <header class="admin-header">
+        <a href="./index.html" class="admin-logo-link">
+          <img src="./assets/court-compass-logo.png" alt="Court Compass" />
+        </a>
+        <div>
+          <p class="eyebrow">Admin Review</p>
+          <h1>Tournament approvals</h1>
+        </div>
+        <button id="signOutButton" class="secondary-action hidden">Sign out</button>
+      </header>
+
+      <section id="loginPanel" class="admin-panel">
+        <h2>Sign in with your admin email</h2>
+        <p>We will send a secure login link. Use the email added to the admin list in Supabase.</p>
+        <form id="loginForm" class="admin-login">
+          <label>Email address<input id="emailInput" type="email" required placeholder="mkinnebrew@iptnorthdakota.com" /></label>
+          <button class="primary-action" type="submit">Send Login Link</button>
+        </form>
+        <p id="loginMessage" class="admin-message"></p>
+      </section>
+
+      <section id="reviewPanel" class="admin-panel hidden">
+        <div class="admin-toolbar">
+          <div>
+            <h2>Review queue</h2>
+            <p id="adminStatus">Loading tournaments...</p>
+          </div>
+          <div class="admin-tabs" aria-label="Status filter">
+            <button class="active" data-status-filter="pending">Pending</button>
+            <button data-status-filter="approved">Approved</button>
+            <button data-status-filter="rejected">Rejected</button>
+            <button data-status-filter="">All</button>
+          </div>
+        </div>
+
+        <div id="adminGrid" class="admin-grid"></div>
+      </section>
+    </main>
+
+    <template id="adminCardTemplate">
+      <article class="admin-card">
+        <div class="admin-card-head">
+          <span class="status-pill"></span>
+          <h3></h3>
+        </div>
+        <form class="admin-edit-form">
+          <label>Tournament name<input name="name" required /></label>
+          <label>Host<input name="host" /></label>
+          <label>Start date<input name="start_date" type="date" /></label>
+          <label>End date<input name="end_date" type="date" /></label>
+          <label>City<input name="city" /></label>
+          <label>State<input name="state" maxlength="2" /></label>
+          <label>Gender<input name="gender" /></label>
+          <label>Grades<input name="grades" /></label>
+          <label>Format<input name="tournament_format" /></label>
+          <label>3v3 / 5v5<input name="play_style" /></label>
+          <label>Venue<input name="venue" /></label>
+          <label>Entry fee<input name="entry_fee" /></label>
+          <label class="wide">Registration link<input name="registration_link" type="url" /></label>
+          <label class="wide">Notes<textarea name="notes" rows="3"></textarea></label>
+          <div class="admin-actions wide">
+            <button type="button" class="approve-button">Approve</button>
+            <button type="button" class="reject-button">Reject</button>
+            <button type="submit" class="save-button">Save Edits</button>
+          </div>
+        </form>
+      </article>
+    </template>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="./supabase-config.js"></script>
+    <script src="./admin.js"></script>
+  </body>
+</html>

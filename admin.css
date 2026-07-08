@@ -1,0 +1,189 @@
+.admin-body {
+  background:
+    radial-gradient(circle at 78% 2%, rgba(112, 168, 199, 0.18), transparent 26%),
+    linear-gradient(180deg, #15191c 0%, #0b0d0f 340px);
+}
+
+.admin-shell {
+  margin: 0 auto;
+  max-width: 1180px;
+  padding: 34px 24px 70px;
+}
+
+.admin-header {
+  align-items: center;
+  display: grid;
+  gap: 22px;
+  grid-template-columns: auto 1fr auto;
+  margin-bottom: 28px;
+}
+
+.admin-logo-link {
+  background: #fff;
+  border-radius: 8px;
+  display: block;
+  padding: 10px;
+}
+
+.admin-logo-link img {
+  display: block;
+  width: 150px;
+}
+
+.admin-header h1 {
+  font-size: clamp(34px, 5vw, 56px);
+  line-height: 1;
+  margin: 0;
+}
+
+.admin-panel {
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.24);
+  padding: 26px;
+}
+
+.admin-panel h2 {
+  font-size: 30px;
+}
+
+.admin-panel p {
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.admin-login {
+  display: grid;
+  gap: 14px;
+  max-width: 480px;
+}
+
+.admin-login label,
+.admin-edit-form label {
+  color: var(--muted);
+  display: grid;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.admin-message {
+  font-weight: 800;
+}
+
+.secondary-action,
+.admin-tabs button,
+.approve-button,
+.reject-button,
+.save-button {
+  border: 0;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: 800;
+  min-height: 42px;
+  padding: 0 14px;
+}
+
+.secondary-action,
+.admin-tabs button {
+  background: #22272a;
+  border: 1px solid #374147;
+}
+
+.admin-toolbar {
+  align-items: center;
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+
+.admin-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.admin-tabs button.active {
+  background: var(--orange);
+}
+
+.admin-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.admin-card {
+  background: linear-gradient(145deg, rgba(48, 55, 59, 0.98), rgba(27, 31, 34, 0.98));
+  border: 1px solid rgba(242, 154, 69, 0.24);
+  border-radius: 8px;
+  padding: 22px;
+}
+
+.admin-card-head {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.admin-card h3 {
+  font-size: 22px;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.status-pill {
+  background: rgba(112, 168, 199, 0.16);
+  border: 1px solid rgba(112, 168, 199, 0.4);
+  border-radius: 999px;
+  color: #b8d7e8;
+  font-size: 12px;
+  font-weight: 900;
+  padding: 6px 10px;
+  text-transform: uppercase;
+}
+
+.admin-edit-form {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.admin-edit-form .wide,
+.admin-actions {
+  grid-column: 1 / -1;
+}
+
+.admin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.approve-button {
+  background: #3d8b5f;
+}
+
+.reject-button {
+  background: #9e423d;
+}
+
+.save-button {
+  background: linear-gradient(135deg, var(--orange), var(--orange-2));
+}
+
+@media (max-width: 760px) {
+  .admin-header,
+  .admin-edit-form {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-toolbar {
+    align-items: start;
+    flex-direction: column;
+  }
+}
