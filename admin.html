@@ -31,6 +31,22 @@
       </section>
 
       <section id="reviewPanel" class="admin-panel hidden">
+        <div class="csv-import-panel">
+          <div>
+            <p class="eyebrow">Bulk Import</p>
+            <h2>Upload tournament CSV</h2>
+            <p>Rows from the CSV will be added as pending tournaments for review.</p>
+          </div>
+          <div class="csv-import-controls">
+            <label class="file-picker">
+              <span>Choose CSV</span>
+              <input id="csvInput" type="file" accept=".csv,text/csv" />
+            </label>
+            <button id="importCsvButton" class="primary-action" type="button">Import CSV</button>
+          </div>
+          <p id="csvImportMessage" class="admin-message"></p>
+        </div>
+
         <div class="admin-toolbar">
           <div>
             <h2>Review queue</h2>
