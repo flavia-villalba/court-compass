@@ -138,7 +138,8 @@
 .preview-button,
 .approve-button,
 .reject-button,
-.save-button {
+.save-button,
+.delete-button {
   border: 0;
   border-radius: 8px;
   color: #fff;
@@ -241,6 +242,13 @@
 
 .reject-button {
   background: #9e423d;
+}
+
+.delete-button {
+  background: transparent;
+  border: 1px solid #9e423d;
+  color: #ffb4ad;
+  margin-left: auto;
 }
 
 .save-button {

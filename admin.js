@@ -165,6 +165,10 @@ function renderAdminCard(tournament) {
     await updateTournament(tournament.id, { status: "rejected" });
   });
 
+  card.querySelector(".delete-button").addEventListener("click", async () => {
+    await deleteTournament(tournament.id, tournament.name);
+  });
+
   adminEls.grid.append(card);
 }
 
@@ -231,6 +235,19 @@ async function updateTournament(id, updates) {
     alert(error.message);
     return;
   }
+  await loadAdminTournaments();
+}
+
+async function deleteTournament(id, name) {
+  const confirmed = window.confirm(`Delete "${name || "this tournament"}" permanently?`);
+  if (!confirmed) return;
+
+  const { error } = await adminClient.from("tournaments").delete().eq("id", id);
+  if (error) {
+    alert(error.message);
+    return;
+  }
+
   await loadAdminTournaments();
 }
 
