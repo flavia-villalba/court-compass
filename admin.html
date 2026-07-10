@@ -86,6 +86,7 @@
           <label class="wide">Registration link<input name="registration_link" type="url" /></label>
           <label class="wide">Notes<textarea name="notes" rows="3"></textarea></label>
           <div class="admin-actions wide">
+            <button type="button" class="preview-button">Preview</button>
             <button type="button" class="approve-button">Approve</button>
             <button type="button" class="reject-button">Reject</button>
             <button type="submit" class="save-button">Save Edits</button>
@@ -93,6 +94,35 @@
         </form>
       </article>
     </template>
+
+    <div id="previewModal" class="preview-modal hidden" role="dialog" aria-modal="true" aria-labelledby="previewTitle">
+      <div class="preview-backdrop" data-close-preview></div>
+      <section class="preview-dialog">
+        <header class="preview-header">
+          <div>
+            <p class="eyebrow">Public Preview</p>
+            <h2 id="previewTitle">Tournament card</h2>
+          </div>
+          <button class="secondary-action" type="button" data-close-preview>Close</button>
+        </header>
+        <article class="tournament-card preview-card">
+          <div class="card-status">Registration open</div>
+          <h3 id="previewName"></h3>
+          <p id="previewHost" class="host"></p>
+          <dl>
+            <div><dt>Date</dt><dd id="previewDate"></dd></div>
+            <div><dt>Place</dt><dd id="previewPlace"></dd></div>
+            <div><dt>Grades</dt><dd id="previewGrades"></dd></div>
+            <div><dt>Venue</dt><dd id="previewVenue"></dd></div>
+          </dl>
+          <div id="previewTags" class="tags"></div>
+          <p id="previewFee" class="fee"></p>
+          <div class="card-actions">
+            <a id="previewRegister" class="register-link" target="_blank" rel="noreferrer">Register Now</a>
+          </div>
+        </article>
+      </section>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="./supabase-config.js"></script>

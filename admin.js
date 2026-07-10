@@ -12,6 +12,16 @@ const adminEls = {
   csvInput: document.querySelector("#csvInput"),
   importCsvButton: document.querySelector("#importCsvButton"),
   csvImportMessage: document.querySelector("#csvImportMessage"),
+  previewModal: document.querySelector("#previewModal"),
+  previewName: document.querySelector("#previewName"),
+  previewHost: document.querySelector("#previewHost"),
+  previewDate: document.querySelector("#previewDate"),
+  previewPlace: document.querySelector("#previewPlace"),
+  previewGrades: document.querySelector("#previewGrades"),
+  previewVenue: document.querySelector("#previewVenue"),
+  previewTags: document.querySelector("#previewTags"),
+  previewFee: document.querySelector("#previewFee"),
+  previewRegister: document.querySelector("#previewRegister"),
   grid: document.querySelector("#adminGrid"),
   template: document.querySelector("#adminCardTemplate"),
   filters: document.querySelectorAll("[data-status-filter]"),
@@ -140,6 +150,10 @@ function renderAdminCard(tournament) {
     await updateTournament(tournament.id, formToTournamentPayload(form));
   });
 
+  card.querySelector(".preview-button").addEventListener("click", () => {
+    showPreview(formToTournamentPayload(form));
+  });
+
   card.querySelector(".approve-button").addEventListener("click", async () => {
     await updateTournament(tournament.id, { ...formToTournamentPayload(form), status: "approved" });
   });
@@ -159,6 +173,47 @@ function formToTournamentPayload(form) {
     end_date: data.end_date || null,
     updated_at: new Date().toISOString(),
   };
+}
+
+function formatPreviewDate(startDate, endDate) {
+  if (!startDate) return "Date TBD";
+  const start = new Date(`${startDate}T00:00:00`);
+  const startText = start.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  if (!endDate || endDate === startDate) return startText;
+  const end = new Date(`${endDate}T00:00:00`);
+  const endText = end.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  return `${startText} - ${endText}`;
+}
+
+function showPreview(tournament) {
+  const registrationLink = tournament.registration_link || "";
+  adminEls.previewName.textContent = tournament.name || "Untitled tournament";
+  adminEls.previewHost.textContent = `by ${tournament.host || "Organizer TBD"}`;
+  adminEls.previewDate.textContent = formatPreviewDate(tournament.start_date, tournament.end_date);
+  adminEls.previewPlace.textContent = [tournament.city, tournament.state].filter(Boolean).join(", ") || "Location TBD";
+  adminEls.previewGrades.textContent = tournament.grades || "Grades TBD";
+  adminEls.previewVenue.textContent = tournament.venue || "Venue TBD";
+  adminEls.previewFee.textContent = tournament.entry_fee || "Fee TBD";
+  adminEls.previewTags.innerHTML = [tournament.gender, tournament.play_style, tournament.tournament_format]
+    .filter(Boolean)
+    .map((tag) => `<span class="tag">${tag}</span>`)
+    .join("");
+
+  if (registrationLink) {
+    adminEls.previewRegister.href = registrationLink;
+    adminEls.previewRegister.classList.remove("disabled");
+    adminEls.previewRegister.textContent = "Register Now";
+  } else {
+    adminEls.previewRegister.removeAttribute("href");
+    adminEls.previewRegister.classList.add("disabled");
+    adminEls.previewRegister.textContent = "Link Pending";
+  }
+
+  adminEls.previewModal.classList.remove("hidden");
+}
+
+function closePreview() {
+  adminEls.previewModal.classList.add("hidden");
 }
 
 async function updateTournament(id, updates) {
@@ -295,6 +350,14 @@ adminEls.signOutButton.addEventListener("click", async () => {
 });
 
 adminEls.importCsvButton.addEventListener("click", importCsv);
+
+document.querySelectorAll("[data-close-preview]").forEach((button) => {
+  button.addEventListener("click", closePreview);
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") closePreview();
+});
 
 adminEls.filters.forEach((button) => {
   button.addEventListener("click", async () => {
