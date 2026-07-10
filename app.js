@@ -625,8 +625,7 @@ function isLikelyBrokenDynamicLink(value) {
   try {
     const parsed = new URL(url);
     const host = parsed.hostname.toLowerCase();
-    const isDynamicHost = host.endsWith(".page.link") || host === "app.goo.gl";
-    return isDynamicHost && parsed.pathname.replace(/\//g, "").length < 4 && !parsed.search;
+    return host.endsWith(".page.link") || host === "app.goo.gl";
   } catch {
     return false;
   }
