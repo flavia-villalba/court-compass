@@ -993,7 +993,12 @@ els.mapButton.addEventListener("click", () => {
 els.form.addEventListener("submit", handleSubmit);
 
 document.querySelectorAll("[data-view-button]").forEach((button) => {
-  button.addEventListener("click", () => setView(button.dataset.viewButton));
+  button.addEventListener("click", () => {
+    setView(button.dataset.viewButton);
+    if (!button.closest(".sidebar")) {
+      document.querySelector(".hero").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  });
 });
 
 document.querySelectorAll("[data-close-details]").forEach((button) => {
