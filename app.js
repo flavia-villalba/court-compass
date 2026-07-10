@@ -519,7 +519,7 @@ const els = {
 let currentView = "tournaments";
 let visualMode = "cards";
 let favorites = readStored("courtCompassFavorites", []);
-let submitted = readStored("courtCompassSubmissions", []);
+let submitted = [];
 let liveTournaments = [];
 let usingLiveData = false;
 
@@ -537,7 +537,7 @@ function writeStored(key, value) {
 
 function allTournaments() {
   if (usingLiveData) return liveTournaments;
-  return [...seedTournaments, ...submitted];
+  return seedTournaments;
 }
 
 async function supabaseRequest(path, options = {}) {
@@ -759,9 +759,10 @@ function renderCards(items) {
   items.forEach((item) => {
     const card = els.template.content.firstElementChild.cloneNode(true);
     const saved = favorites.includes(item.id);
+    const eventLink = bestEventLink(item);
     card.querySelector(".favorite-button").classList.toggle("saved", saved);
     card.querySelector(".favorite-button").textContent = saved ? "♥" : "♡";
-    card.querySelector(".card-status").textContent = item.status === "Pending Review" ? "Pending review" : item.registrationLink ? "Registration open" : "Details pending";
+    card.querySelector(".card-status").textContent = item.status === "Pending Review" ? "Pending review" : eventLink ? "Registration open" : "Details pending";
     card.querySelector("h3").textContent = item.name;
     card.querySelector(".host").textContent = `by ${item.host || "Organizer TBD"}`;
     card.querySelector(".date").textContent = formatDateRange(item);
@@ -772,7 +773,6 @@ function renderCards(items) {
     card.querySelector(".tags").innerHTML = [item.gender, item.playStyle, item.format].filter(Boolean).map((tag) => `<span class="tag">${tag}</span>`).join("");
 
     const register = card.querySelector(".register-link");
-    const eventLink = bestEventLink(item);
     if (eventLink) {
       register.href = eventLink;
       register.textContent = "Register Now";
@@ -820,7 +820,7 @@ function showDetails(item) {
   if (eventLink) {
     els.detailsRegister.href = eventLink;
     els.detailsRegister.classList.remove("disabled");
-    els.detailsRegister.textContent = item.registrationLink ? "Open Registration" : "Open Website";
+    els.detailsRegister.textContent = normalizeExternalUrl(item.registrationLink) === eventLink ? "Open Registration" : "Open Website";
   } else {
     els.detailsRegister.removeAttribute("href");
     els.detailsRegister.classList.add("disabled");
@@ -969,6 +969,7 @@ async function handleSubmit(event) {
 }
 
 async function initApp() {
+  localStorage.removeItem("courtCompassSubmissions");
   await loadApprovedTournaments();
   populateFilters();
   render();
