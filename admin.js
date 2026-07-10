@@ -59,6 +59,12 @@ const csvHeaderMap = {
   email: "contact_email",
   phone: "phone",
   website: "website",
+  flyer: "flyer_url",
+  flyerurl: "flyer_url",
+  flyerlink: "flyer_url",
+  flyerimagelink: "flyer_url",
+  image: "flyer_url",
+  imageurl: "flyer_url",
   sourceurl: "source_url",
   source: "source_url",
   notes: "notes",
@@ -143,6 +149,7 @@ function renderAdminCard(tournament) {
     "registration_link",
     "website",
     "source_url",
+    "flyer_url",
     "notes",
   ].forEach((field) => {
     if (form.elements[field]) form.elements[field].value = tournament[field] || "";

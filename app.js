@@ -500,6 +500,20 @@ const els = {
   viewTitle: document.querySelector("#viewTitle"),
   form: document.querySelector("#submitForm"),
   success: document.querySelector("#formSuccess"),
+  detailsModal: document.querySelector("#detailsModal"),
+  detailsTitle: document.querySelector("#detailsTitle"),
+  detailsHost: document.querySelector("#detailsHost"),
+  detailsDate: document.querySelector("#detailsDate"),
+  detailsPlace: document.querySelector("#detailsPlace"),
+  detailsGrades: document.querySelector("#detailsGrades"),
+  detailsFormat: document.querySelector("#detailsFormat"),
+  detailsVenue: document.querySelector("#detailsVenue"),
+  detailsAwards: document.querySelector("#detailsAwards"),
+  detailsContact: document.querySelector("#detailsContact"),
+  detailsNotes: document.querySelector("#detailsNotes"),
+  detailsRegister: document.querySelector("#detailsRegister"),
+  flyerFrame: document.querySelector("#flyerFrame"),
+  detailsFlyer: document.querySelector("#detailsFlyer"),
 };
 
 let currentView = "tournaments";
@@ -583,6 +597,7 @@ function dbToTournament(row) {
     contact: row.contact_name,
     website: row.website,
     notes: row.notes,
+    flyerUrl: row.flyer_url,
     status: row.status,
     lat: coords.lat,
     lng: coords.lng,
@@ -605,6 +620,7 @@ function formToDatabaseRow(data) {
     registration_link: data.registrationLink,
     entry_fee: data.fee,
     website: data.registrationLink,
+    flyer_url: data.flyerUrl,
     notes: data.notes,
     status: "pending",
   };
@@ -737,18 +753,50 @@ function renderCards(items) {
       render();
     });
 
-    card.querySelector(".details-button").addEventListener("click", () => {
-      const details = [
-        item.awards && `Awards: ${item.awards}`,
-        item.contact && `Contact: ${item.contact}`,
-        item.website && `Website: ${item.website}`,
-        item.notes && `Notes: ${item.notes}`,
-      ].filter(Boolean).join("\n");
-      alert(details || "No extra details yet.");
-    });
+    card.querySelector(".details-button").addEventListener("click", () => showDetails(item));
 
     els.grid.append(card);
   });
+}
+
+function showDetails(item) {
+  const eventLink = item.registrationLink || item.website || "";
+  els.detailsTitle.textContent = item.name || "Tournament details";
+  els.detailsHost.textContent = `by ${item.host || "Organizer TBD"}`;
+  els.detailsDate.textContent = formatDateRange(item);
+  els.detailsPlace.textContent = `${item.city || "City TBD"}, ${item.state || "State TBD"}`;
+  els.detailsGrades.textContent = item.grades || "Grades TBD";
+  els.detailsFormat.textContent = [item.gender, item.playStyle, item.format].filter(Boolean).join(" · ") || "Format TBD";
+  els.detailsVenue.textContent = item.venue || "Venue TBD";
+  els.detailsAwards.textContent = item.awards || "Awards TBD";
+  els.detailsContact.textContent = item.contact || "Contact TBD";
+  els.detailsNotes.textContent = item.notes || "No extra notes yet.";
+
+  if (item.flyerUrl) {
+    els.detailsFlyer.src = item.flyerUrl;
+    els.detailsFlyer.alt = `${item.name || "Tournament"} flyer`;
+    els.flyerFrame.classList.remove("hidden");
+  } else {
+    els.detailsFlyer.removeAttribute("src");
+    els.detailsFlyer.alt = "";
+    els.flyerFrame.classList.add("hidden");
+  }
+
+  if (eventLink) {
+    els.detailsRegister.href = eventLink;
+    els.detailsRegister.classList.remove("disabled");
+    els.detailsRegister.textContent = item.registrationLink ? "Open Registration" : "Open Website";
+  } else {
+    els.detailsRegister.removeAttribute("href");
+    els.detailsRegister.classList.add("disabled");
+    els.detailsRegister.textContent = "No Event Link";
+  }
+
+  els.detailsModal.classList.remove("hidden");
+}
+
+function closeDetails() {
+  els.detailsModal.classList.add("hidden");
 }
 
 function renderMap(items) {
@@ -859,6 +907,7 @@ async function handleSubmit(event) {
     awards: "",
     contact: "",
     website: data.registrationLink,
+    flyerUrl: data.flyerUrl,
     notes: data.notes,
     status: "Pending Review",
     lat: 46.8772,
@@ -909,4 +958,12 @@ els.form.addEventListener("submit", handleSubmit);
 
 document.querySelectorAll("[data-view-button]").forEach((button) => {
   button.addEventListener("click", () => setView(button.dataset.viewButton));
+});
+
+document.querySelectorAll("[data-close-details]").forEach((button) => {
+  button.addEventListener("click", closeDetails);
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") closeDetails();
 });

@@ -183,6 +183,7 @@
               <label>Venue<input name="venue" /></label>
               <label>Entry fee<input name="fee" placeholder="Example: $250" /></label>
               <label class="wide">Registration link<input name="registrationLink" type="url" placeholder="https://..." /></label>
+              <label class="wide">Flyer image link<input name="flyerUrl" type="url" placeholder="https://..." /></label>
               <label class="wide">Notes<textarea name="notes" rows="4"></textarea></label>
             </div>
 
@@ -213,6 +214,38 @@
         </div>
       </article>
     </template>
+
+    <div id="detailsModal" class="details-modal hidden" role="dialog" aria-modal="true" aria-labelledby="detailsTitle">
+      <div class="details-backdrop" data-close-details></div>
+      <section class="details-dialog">
+        <header class="details-header">
+          <div>
+            <p class="eyebrow">Tournament Details</p>
+            <h2 id="detailsTitle"></h2>
+          </div>
+          <button class="details-close" type="button" data-close-details>Close</button>
+        </header>
+        <div class="details-layout">
+          <figure class="flyer-frame hidden" id="flyerFrame">
+            <img id="detailsFlyer" alt="" />
+          </figure>
+          <div class="details-copy">
+            <p id="detailsHost" class="host"></p>
+            <dl>
+              <div><dt>Date</dt><dd id="detailsDate"></dd></div>
+              <div><dt>Place</dt><dd id="detailsPlace"></dd></div>
+              <div><dt>Grades</dt><dd id="detailsGrades"></dd></div>
+              <div><dt>Format</dt><dd id="detailsFormat"></dd></div>
+              <div><dt>Venue</dt><dd id="detailsVenue"></dd></div>
+              <div><dt>Awards</dt><dd id="detailsAwards"></dd></div>
+              <div><dt>Contact</dt><dd id="detailsContact"></dd></div>
+              <div><dt>Notes</dt><dd id="detailsNotes"></dd></div>
+            </dl>
+            <a id="detailsRegister" class="register-link" target="_blank" rel="noreferrer">Open Event Page</a>
+          </div>
+        </div>
+      </section>
+    </div>
 
     <script src="./supabase-config.js"></script>
     <script src="./app.js"></script>
