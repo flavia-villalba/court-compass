@@ -84,6 +84,8 @@
           <label>Venue<input name="venue" /></label>
           <label>Entry fee<input name="entry_fee" /></label>
           <label class="wide">Registration link<input name="registration_link" type="url" /></label>
+          <label class="wide">Website<input name="website" type="url" /></label>
+          <label class="wide">Source URL<input name="source_url" type="url" /></label>
           <label class="wide">Notes<textarea name="notes" rows="3"></textarea></label>
           <div class="admin-actions wide">
             <button type="button" class="preview-button">Preview</button>
@@ -103,7 +105,10 @@
             <p class="eyebrow">Public Preview</p>
             <h2 id="previewTitle">Tournament card</h2>
           </div>
-          <button class="secondary-action" type="button" data-close-preview>Close</button>
+          <div class="preview-header-actions">
+            <a id="previewEventLink" class="secondary-action" target="_blank" rel="noreferrer">Open Event Page</a>
+            <button class="secondary-action" type="button" data-close-preview>Close</button>
+          </div>
         </header>
         <article class="tournament-card preview-card">
           <div class="card-status">Registration open</div>

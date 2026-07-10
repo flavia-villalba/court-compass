@@ -22,6 +22,7 @@ const adminEls = {
   previewTags: document.querySelector("#previewTags"),
   previewFee: document.querySelector("#previewFee"),
   previewRegister: document.querySelector("#previewRegister"),
+  previewEventLink: document.querySelector("#previewEventLink"),
   grid: document.querySelector("#adminGrid"),
   template: document.querySelector("#adminCardTemplate"),
   filters: document.querySelectorAll("[data-status-filter]"),
@@ -140,6 +141,8 @@ function renderAdminCard(tournament) {
     "venue",
     "entry_fee",
     "registration_link",
+    "website",
+    "source_url",
     "notes",
   ].forEach((field) => {
     if (form.elements[field]) form.elements[field].value = tournament[field] || "";
@@ -186,7 +189,7 @@ function formatPreviewDate(startDate, endDate) {
 }
 
 function showPreview(tournament) {
-  const registrationLink = tournament.registration_link || "";
+  const eventLink = tournament.registration_link || tournament.website || tournament.source_url || "";
   adminEls.previewName.textContent = tournament.name || "Untitled tournament";
   adminEls.previewHost.textContent = `by ${tournament.host || "Organizer TBD"}`;
   adminEls.previewDate.textContent = formatPreviewDate(tournament.start_date, tournament.end_date);
@@ -199,14 +202,20 @@ function showPreview(tournament) {
     .map((tag) => `<span class="tag">${tag}</span>`)
     .join("");
 
-  if (registrationLink) {
-    adminEls.previewRegister.href = registrationLink;
+  if (eventLink) {
+    adminEls.previewRegister.href = eventLink;
+    adminEls.previewEventLink.href = eventLink;
     adminEls.previewRegister.classList.remove("disabled");
+    adminEls.previewEventLink.classList.remove("disabled");
     adminEls.previewRegister.textContent = "Register Now";
+    adminEls.previewEventLink.textContent = tournament.registration_link ? "Open Event Page" : "Open Source Page";
   } else {
     adminEls.previewRegister.removeAttribute("href");
+    adminEls.previewEventLink.removeAttribute("href");
     adminEls.previewRegister.classList.add("disabled");
+    adminEls.previewEventLink.classList.add("disabled");
     adminEls.previewRegister.textContent = "Link Pending";
+    adminEls.previewEventLink.textContent = "No Link Yet";
   }
 
   adminEls.previewModal.classList.remove("hidden");
