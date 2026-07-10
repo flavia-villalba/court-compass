@@ -1002,7 +1002,7 @@ dd {
 .auth-shell {
   display: grid;
   min-height: 100vh;
-  padding: 24px;
+  padding: 24px 16px;
   place-items: center;
 }
 
@@ -1010,56 +1010,56 @@ dd {
   background: #fff;
   border: 1px solid #d9d9d9;
   border-radius: 8px;
-  box-shadow: 0 18px 70px rgba(0, 0, 0, 0.08);
-  max-width: 760px;
-  padding: clamp(34px, 7vw, 72px);
-  width: min(100%, 760px);
+  box-shadow: 0 14px 44px rgba(0, 0, 0, 0.08);
+  max-width: 520px;
+  padding: 36px;
+  width: min(100%, 520px);
 }
 
 .auth-logo-link {
   display: grid;
   justify-items: center;
-  margin: 0 auto 46px;
+  margin: 0 auto 26px;
   text-decoration: none;
 }
 
 .auth-logo {
   display: block;
-  max-width: 190px;
-  width: 42%;
+  max-width: 132px;
+  width: 34%;
 }
 
 .auth-heading {
-  margin-bottom: 44px;
+  margin-bottom: 28px;
   text-align: center;
 }
 
 .auth-heading h1 {
   color: #1d1d1f;
-  font-size: clamp(42px, 7vw, 58px);
-  line-height: 1.05;
-  margin: 0 0 22px;
+  font-size: 34px;
+  line-height: 1.1;
+  margin: 0 0 12px;
 }
 
 .auth-heading p {
   color: #aaa;
-  font-size: clamp(24px, 4vw, 34px);
+  font-size: 18px;
   line-height: 1.35;
   margin: 0 auto;
-  max-width: 620px;
+  max-width: 390px;
 }
 
 .auth-form {
   display: grid;
-  gap: 32px;
+  gap: 18px;
 }
 
 .auth-form label {
   color: #1d1d1f;
   display: grid;
-  font-size: 24px;
+  font-size: 15px;
   font-weight: 650;
-  gap: 18px;
+  gap: 8px;
 }
 
 .auth-form input {
@@ -1067,10 +1067,10 @@ dd {
   border: 1px solid #ddd;
   border-radius: 8px;
   color: #1d1d1f;
-  font-size: 24px;
+  font-size: 16px;
   font-weight: 400;
-  min-height: 72px;
-  padding: 0 24px;
+  min-height: 50px;
+  padding: 0 14px;
 }
 
 .auth-form input::placeholder {
@@ -1088,9 +1088,9 @@ dd {
   border: 0;
   border-radius: 8px;
   color: #fff;
-  font-size: 24px;
+  font-size: 16px;
   font-weight: 750;
-  min-height: 72px;
+  min-height: 50px;
 }
 
 .auth-submit:disabled {
@@ -1113,8 +1113,8 @@ dd {
 
 .auth-switch {
   color: #aaa;
-  font-size: 25px;
-  margin: 28px 0 0;
+  font-size: 16px;
+  margin: 20px 0 0;
   text-align: center;
 }
 
@@ -1210,29 +1210,26 @@ dd {
   }
 
   .auth-card {
-    padding: 32px 24px;
+    padding: 28px 20px;
   }
 
   .auth-logo {
-    max-width: 150px;
+    max-width: 116px;
   }
 
   .auth-heading {
-    margin-bottom: 34px;
+    margin-bottom: 24px;
   }
 
   .auth-form {
-    gap: 22px;
+    gap: 16px;
   }
 
-  .auth-form label,
-  .auth-form input,
-  .auth-submit,
-  .auth-switch {
-    font-size: 18px;
+  .auth-heading h1 {
+    font-size: 28px;
   }
 
   .auth-heading p {
-    font-size: 20px;
+    font-size: 16px;
   }
 }
