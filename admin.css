@@ -108,10 +108,25 @@
 .admin-edit-form label {
   color: var(--muted);
   display: grid;
-  gap: 8px;
-  font-size: 12px;
-  font-weight: 800;
+  gap: 7px;
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
+}
+
+.admin-edit-form input,
+.admin-edit-form textarea {
+  background: #131719;
+  border-color: #2b343a;
+  color: #edf1f3;
+  font-size: 14px;
+  font-weight: 400;
+  min-height: 42px;
+}
+
+.admin-edit-form textarea {
+  line-height: 1.45;
 }
 
 .admin-message {
