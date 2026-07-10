@@ -198,6 +198,11 @@
   margin-bottom: 18px;
 }
 
+.admin-card-head > div {
+  display: grid;
+  gap: 10px;
+}
+
 .admin-card h3 {
   font-size: 22px;
   line-height: 1.2;
@@ -248,7 +253,10 @@
   background: transparent;
   border: 1px solid #9e423d;
   color: #ffb4ad;
-  margin-left: auto;
+}
+
+.delete-button-top {
+  min-width: 84px;
 }
 
 .save-button {

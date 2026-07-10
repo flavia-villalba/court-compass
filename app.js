@@ -596,12 +596,47 @@ function dbToTournament(row) {
     awards: row.prize_awards,
     contact: row.contact_name,
     website: row.website,
+    sourceUrl: row.source_url,
     notes: row.notes,
     flyerUrl: row.flyer_url,
     status: row.status,
     lat: coords.lat,
     lng: coords.lng,
   };
+}
+
+function normalizeExternalUrl(value) {
+  const raw = String(value || "").trim();
+  if (!raw) return "";
+  const withProtocol = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
+
+  try {
+    const url = new URL(withProtocol);
+    return url.href;
+  } catch {
+    return "";
+  }
+}
+
+function isLikelyBrokenDynamicLink(value) {
+  const url = normalizeExternalUrl(value);
+  if (!url) return false;
+
+  try {
+    const parsed = new URL(url);
+    const host = parsed.hostname.toLowerCase();
+    const isDynamicHost = host.endsWith(".page.link") || host === "app.goo.gl";
+    return isDynamicHost && parsed.pathname.replace(/\//g, "").length < 4 && !parsed.search;
+  } catch {
+    return false;
+  }
+}
+
+function bestEventLink(item) {
+  return [item.registrationLink, item.website, item.sourceUrl]
+    .filter((link) => !isLikelyBrokenDynamicLink(link))
+    .map(normalizeExternalUrl)
+    .find(Boolean) || "";
 }
 
 function formToDatabaseRow(data) {
@@ -738,8 +773,9 @@ function renderCards(items) {
     card.querySelector(".tags").innerHTML = [item.gender, item.playStyle, item.format].filter(Boolean).map((tag) => `<span class="tag">${tag}</span>`).join("");
 
     const register = card.querySelector(".register-link");
-    if (item.registrationLink) {
-      register.href = item.registrationLink;
+    const eventLink = bestEventLink(item);
+    if (eventLink) {
+      register.href = eventLink;
       register.textContent = "Register Now";
     } else {
       register.removeAttribute("href");
@@ -760,7 +796,7 @@ function renderCards(items) {
 }
 
 function showDetails(item) {
-  const eventLink = item.registrationLink || item.website || "";
+  const eventLink = bestEventLink(item);
   els.detailsTitle.textContent = item.name || "Tournament details";
   els.detailsHost.textContent = `by ${item.host || "Organizer TBD"}`;
   els.detailsDate.textContent = formatDateRange(item);

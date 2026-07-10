@@ -199,8 +199,42 @@ function formatPreviewDate(startDate, endDate) {
   return `${startText} - ${endText}`;
 }
 
+function normalizeExternalUrl(value) {
+  const raw = String(value || "").trim();
+  if (!raw) return "";
+  const withProtocol = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
+
+  try {
+    const url = new URL(withProtocol);
+    return url.href;
+  } catch {
+    return "";
+  }
+}
+
+function isLikelyBrokenDynamicLink(value) {
+  const url = normalizeExternalUrl(value);
+  if (!url) return false;
+
+  try {
+    const parsed = new URL(url);
+    const host = parsed.hostname.toLowerCase();
+    const isDynamicHost = host.endsWith(".page.link") || host === "app.goo.gl";
+    return isDynamicHost && parsed.pathname.replace(/\//g, "").length < 4 && !parsed.search;
+  } catch {
+    return false;
+  }
+}
+
+function bestEventLink(tournament) {
+  return [tournament.registration_link, tournament.website, tournament.source_url]
+    .filter((link) => !isLikelyBrokenDynamicLink(link))
+    .map(normalizeExternalUrl)
+    .find(Boolean) || "";
+}
+
 function showPreview(tournament) {
-  const eventLink = tournament.registration_link || tournament.website || tournament.source_url || "";
+  const eventLink = bestEventLink(tournament);
   adminEls.previewName.textContent = tournament.name || "Untitled tournament";
   adminEls.previewHost.textContent = `by ${tournament.host || "Organizer TBD"}`;
   adminEls.previewDate.textContent = formatPreviewDate(tournament.start_date, tournament.end_date);
@@ -219,7 +253,7 @@ function showPreview(tournament) {
     adminEls.previewRegister.classList.remove("disabled");
     adminEls.previewEventLink.classList.remove("disabled");
     adminEls.previewRegister.textContent = "Register Now";
-    adminEls.previewEventLink.textContent = tournament.registration_link ? "Open Event Page" : "Open Source Page";
+    adminEls.previewEventLink.textContent = normalizeExternalUrl(tournament.registration_link) === eventLink ? "Open Event Page" : "Open Source Page";
   } else {
     adminEls.previewRegister.removeAttribute("href");
     adminEls.previewEventLink.removeAttribute("href");
